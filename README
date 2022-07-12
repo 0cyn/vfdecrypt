@@ -1,5 +1,7 @@
 This is a cross platform dmg decryption tool. Maintained by quasarboi, but credit goes to its original owner.
 
+mac prep: `brew install openssl`
+
 To build on Linux, run "make linux";
 To build on Mac, run "make mac";
 To install, run "sudo make install";

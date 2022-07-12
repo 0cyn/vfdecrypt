@@ -1,7 +1,7 @@
 linux: 
 	gcc -o vfdecrypt vfdecrypt.c -lcrypto
 mac:
-	gcc -o vfdecrypt vfdecrypt.c -lcrypto -DMAC_OSX
+	clang -o vfdecrypt vfdecrypt.c -L/usr/local/opt/openssl@1.1/lib -w -lcrypto -DMAC_OSX
 install: 
 	cp ./vfdecrypt /usr/local/bin
 	ldconfig

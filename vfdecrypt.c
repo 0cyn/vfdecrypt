@@ -198,7 +198,7 @@ void adjust_v2_header_byteorder(cencrypted_v2_pwheader *pwhdr) {
   pwhdr->encrypted_keyblob_size = htonl(pwhdr->encrypted_keyblob_size);
 }
 
-HMAC_CTX hmacsha1_ctx;
+HMAC_CTX *hmacsha1_ctx;
 AES_KEY aes_decrypt_key;
 int CHUNK_SIZE=4096;  // default
 
@@ -227,7 +227,7 @@ void decrypt_chunk(uint8_t *ctext, uint8_t *ptext, uint32_t chunk_no) {
 /* DES3-EDE unwrap operation loosely based on to RFC 2630, section 12.6
    wrapped_key has to be 40 bytes in length.  */
 int apple_des3_ede_unwrap_key(uint8_t *wrapped_key, int wrapped_key_len, uint8_t *decryptKey, uint8_t *unwrapped_key) {
-  EVP_CIPHER_CTX ctx;
+  EVP_CIPHER_CTX *ctx;
   uint8_t *TEMP1, *TEMP2, *CEKICV;
   uint8_t IV[8] = { 0x4a, 0xdd, 0xa2, 0x2c, 0x79, 0xe8, 0x21, 0x05 };
   int outlen, tmplen, i;
@@ -294,7 +294,7 @@ int unwrap_v1_header(char *passphrase, cencrypted_v1_header *header, uint8_t *ae
 int unwrap_v2_header(char *passphrase, cencrypted_v2_pwheader *header, uint8_t *aes_key, uint8_t *hmacsha1_key) {
   /* derived key is a 3DES-EDE key */
   uint8_t derived_key[192/8];
-  EVP_CIPHER_CTX ctx;
+  EVP_CIPHER_CTX *ctx;
   uint8_t *TEMP1;
   int outlen, tmplen;
 
@@ -452,7 +452,7 @@ int main(int argc, char *argv[]) {
     CHUNK_SIZE = v2header.blocksize;
   }
 
-  HMAC_CTX_init(&hmacsha1_ctx);
+  HMAC_CTX_reset(&hmacsha1_ctx);
   HMAC_Init_ex(&hmacsha1_ctx, hmacsha1_key, sizeof(hmacsha1_key), EVP_sha1(), NULL);
   AES_set_decrypt_key(aes_key, CIPHER_KEY_LENGTH * 8, &aes_decrypt_key);
 
